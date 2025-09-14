@@ -8,7 +8,6 @@ import com.ucm.Api_NotificacaoUCM.model.User;
 import com.ucm.Api_NotificacaoUCM.repo.RoleRepo;
 import com.ucm.Api_NotificacaoUCM.repo.StudentRepo;
 import com.ucm.Api_NotificacaoUCM.repo.UserRepo;
-import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
