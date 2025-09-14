@@ -1,4 +1,6 @@
 package com.ucm.Api_NotificacaoUCM.dto;
 
-public record CreateStudent(String email, String nome, String senha, String studentNumber) {
+import jakarta.validation.constraints.Email;
+
+public record CreateStudent(@Email String email, String nome, String senha, String studentNumber, long cursoid, int anoacademico) {
 }

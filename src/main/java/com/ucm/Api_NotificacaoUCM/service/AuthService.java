@@ -13,6 +13,7 @@ import org.springframework.security.oauth2.jwt.JwtEncoder;
 import org.springframework.security.oauth2.jwt.JwtEncoderParameters;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
 import java.time.Instant;
 import java.util.stream.Collectors;
 
@@ -37,7 +38,7 @@ public class AuthService {
         }
 
         var now = Instant.now();
-        var expiredIn = 300L;
+        var expiredIn = 1L; // 1 Hora de duracao
 
         var roles = user.getRoles()
                 .stream()
@@ -48,7 +49,7 @@ public class AuthService {
                 .issuer("mybackend")
                 .subject(String.valueOf(user.getId()))
                 .issuedAt(now)
-                .expiresAt(now.plusSeconds(expiredIn))
+                .expiresAt(now.plus(Duration.ofHours(expiredIn)))
                 .claim("authorities", roles)
                 .build();
 

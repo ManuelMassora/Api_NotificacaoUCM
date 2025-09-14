@@ -26,14 +26,15 @@ public class Class {
     @Column(name = "ano")
     private Integer ano;
 
-    @Column(name = "cadastro", length = 100)
-    private String cadastro;
-
     @Column(name = "ano_letivo")
     private Integer anoLetivo;
 
     @ManyToMany(mappedBy = "classes")
     private Set<Student> students = new HashSet<>();
+
+    @ManyToOne
+    @JoinColumn(name = "Curso_ID")
+    private Curso curso;
 
     public long getId() {
         return id;
@@ -75,14 +76,6 @@ public class Class {
         this.ano = ano;
     }
 
-    public String getCadastro() {
-        return cadastro;
-    }
-
-    public void setCadastro(String cadastro) {
-        this.cadastro = cadastro;
-    }
-
     public Integer getAnoLetivo() {
         return anoLetivo;
     }
@@ -97,5 +90,13 @@ public class Class {
 
     public void setStudents(Set<Student> students) {
         this.students = students;
+    }
+
+    public Curso getCurso() {
+        return curso;
+    }
+
+    public void setCurso(Curso curso) {
+        this.curso = curso;
     }
 }

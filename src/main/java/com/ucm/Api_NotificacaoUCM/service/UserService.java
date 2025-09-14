@@ -5,6 +5,7 @@ import com.ucm.Api_NotificacaoUCM.dto.CreateUser;
 import com.ucm.Api_NotificacaoUCM.model.Role;
 import com.ucm.Api_NotificacaoUCM.model.Student;
 import com.ucm.Api_NotificacaoUCM.model.User;
+import com.ucm.Api_NotificacaoUCM.repo.CursoRepository;
 import com.ucm.Api_NotificacaoUCM.repo.RoleRepo;
 import com.ucm.Api_NotificacaoUCM.repo.StudentRepo;
 import com.ucm.Api_NotificacaoUCM.repo.UserRepo;
@@ -21,12 +22,15 @@ public class UserService {
     private final RoleRepo roleRepo;
     private final StudentRepo studentRepo;
     private final BCryptPasswordEncoder bCryptPasswordEncoder;
+    private final CursoRepository cursoRepository;
 
-    public UserService(UserRepo userRepo, RoleRepo roleRepo, StudentRepo studentRepo, BCryptPasswordEncoder bCryptPasswordEncoder) {
+    public UserService(UserRepo userRepo, RoleRepo roleRepo, StudentRepo studentRepo, BCryptPasswordEncoder bCryptPasswordEncoder,
+                       CursoRepository cursoRepository) {
         this.userRepo = userRepo;
         this.roleRepo = roleRepo;
         this.studentRepo = studentRepo;
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
+        this.cursoRepository = cursoRepository;
     }
 
     public void CreateStudent(CreateStudent createStudent) {
@@ -45,10 +49,23 @@ public class UserService {
         if (createStudent.studentNumber() == null || createStudent.studentNumber().trim().isEmpty()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Student number cannot be null or empty");
         }
+        if (createStudent.studentNumber() == null || createStudent.studentNumber().trim().isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Student number cannot be null or empty");
+        }
+        if (createStudent.cursoid() == 0) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CursoID cannot be null or empty");
+        }
+        if (createStudent.anoacademico() == 0 || createStudent.anoacademico() > 5) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ANo nao pode ser vazio, e maior que 5");
+        }
         if (userRepo.findByEmail(createStudent.email()).isPresent()) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Email already exist");
         }
         var role = roleRepo.findByName(Role.Values.BASIC.name());
+        var curso = cursoRepository.findById(createStudent.cursoid());
+        if (curso.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Curso ID nao existe");
+        }
         var user = new User();
         user.setEmail(createStudent.email());
         user.setName(createStudent.nome());
@@ -60,6 +77,8 @@ public class UserService {
             var student = new Student();
             student.setUserId(usersafe);
             student.setStudentNumber(createStudent.studentNumber());
+            student.setCurso(curso.get());
+            student.setAnoAcademindo(createStudent.anoacademico());
             studentRepo.save(student);
         } catch (Exception e) {
             throw new RuntimeException("Error saving student data: " + e.getMessage(), e);

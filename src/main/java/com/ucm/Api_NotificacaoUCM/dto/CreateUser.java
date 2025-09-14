@@ -1,4 +1,6 @@
 package com.ucm.Api_NotificacaoUCM.dto;
 
-public record CreateUser(String email, String nome, String senha) {
+import jakarta.validation.constraints.Email;
+
+public record CreateUser(@Email String email, String nome, String senha) {
 }
