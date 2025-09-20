@@ -1,6 +1,7 @@
 package com.ucm.Api_NotificacaoUCM.controller;
 
 import com.ucm.Api_NotificacaoUCM.dto.CreateNotification;
+import com.ucm.Api_NotificacaoUCM.dto.NotificationDTO;
 import com.ucm.Api_NotificacaoUCM.model.Notification;
 import com.ucm.Api_NotificacaoUCM.service.NotificationService;
 import org.springframework.data.domain.Page;
@@ -28,33 +29,31 @@ public class NotificationController {
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('professor')")
-    public ResponseEntity<Notification> create(@RequestBody @Valid CreateNotification dto, UriComponentsBuilder uriBuilder) {
+    public ResponseEntity<NotificationDTO> create(@RequestBody @Valid CreateNotification dto, UriComponentsBuilder uriBuilder) {
         try {
             var createdNotification = notificationService.create(dto);
-            URI uri = uriBuilder.path("/notification/{id}").buildAndExpand(createdNotification.getId()).toUri();
-            return ResponseEntity.created(uri).body(createdNotification);
+            return ResponseEntity.ok().body(createdNotification);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
         }
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<Notification> getById(@PathVariable long id) {
-        Optional<Notification> notification = notificationService.getById(id);
-        return notification.map(ResponseEntity::ok)
-                .orElseGet(() -> ResponseEntity.notFound().build());
+    public ResponseEntity<NotificationDTO> getById(@PathVariable long id) {
+        NotificationDTO notification = notificationService.getById(id);
+        return ResponseEntity.ok(notification);
     }
 
     @GetMapping
-    public ResponseEntity<Page<Notification>> getAll(@PageableDefault(size = 10, sort = {"dataCriacao"}) Pageable pageable) {
-        Page<Notification> notifications = notificationService.getAll(pageable);
+    public ResponseEntity<Page<NotificationDTO>> getAll(@PageableDefault(size = 10, sort = {"dataCriacao"}) Pageable pageable) {
+        Page<NotificationDTO> notifications = notificationService.getAll(pageable);
         return ResponseEntity.ok(notifications);
     }
 
     @GetMapping("/by-class/{classId}")
-    public ResponseEntity<Page<Notification>> getAllByClass(@PathVariable long classId, @PageableDefault(size = 10, sort = {"dataCriacao"}) Pageable pageable) {
+    public ResponseEntity<Page<NotificationDTO>> getAllByClass(@PathVariable long classId, @PageableDefault(size = 10, sort = {"dataCriacao"}) Pageable pageable) {
         try {
-            Page<Notification> notifications = notificationService.getAllByClass(classId, pageable);
+            Page<NotificationDTO> notifications = notificationService.getAllByClass(classId, pageable);
             return ResponseEntity.ok(notifications);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();

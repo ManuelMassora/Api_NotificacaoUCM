@@ -1,6 +1,8 @@
 package com.ucm.Api_NotificacaoUCM.model;
 
 import jakarta.persistence.*;
+
+import java.time.Year;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -24,10 +26,10 @@ public class Class {
     private String descricao;
 
     @Column(name = "ano")
-    private Integer ano;
+    private int ano;
 
     @Column(name = "ano_letivo")
-    private Integer anoLetivo;
+    private Year anoLetivo;
 
     @ManyToMany(mappedBy = "classes")
     private Set<Student> students = new HashSet<>();
@@ -68,19 +70,19 @@ public class Class {
         this.descricao = descricao;
     }
 
-    public Integer getAno() {
+    public int getAno() {
         return ano;
     }
 
-    public void setAno(Integer ano) {
+    public void setAno(int ano) {
         this.ano = ano;
     }
 
-    public Integer getAnoLetivo() {
+    public Year getAnoLetivo() {
         return anoLetivo;
     }
 
-    public void setAnoLetivo(Integer anoLetivo) {
+    public void setAnoLetivo(Year anoLetivo) {
         this.anoLetivo = anoLetivo;
     }
 

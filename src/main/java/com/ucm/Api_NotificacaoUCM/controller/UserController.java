@@ -1,9 +1,6 @@
 package com.ucm.Api_NotificacaoUCM.controller;
 
-import com.ucm.Api_NotificacaoUCM.dto.CreateStudent;
-import com.ucm.Api_NotificacaoUCM.dto.CreateUser;
-import com.ucm.Api_NotificacaoUCM.dto.LoginRequest;
-import com.ucm.Api_NotificacaoUCM.dto.LoginResponse;
+import com.ucm.Api_NotificacaoUCM.dto.*;
 import com.ucm.Api_NotificacaoUCM.model.Curso;
 import com.ucm.Api_NotificacaoUCM.model.Student;
 import com.ucm.Api_NotificacaoUCM.model.User;
@@ -54,7 +51,7 @@ public class UserController {
 
     @GetMapping("/perfil")
     @PreAuthorize("hasAnyAuthority('admin','professor')")
-    public ResponseEntity<User> MyPerfil(JwtAuthenticationToken token) {
+    public ResponseEntity<UserDTO> MyPerfil(JwtAuthenticationToken token) {
         try {
             var user = userService.MyProfile(token);
             return ResponseEntity.ok(user);
@@ -65,14 +62,14 @@ public class UserController {
 
     @GetMapping("user/{id}")
     @PreAuthorize("hasAnyAuthority('admin')")
-    public ResponseEntity<User> findById(@PathVariable Long id) {
+    public ResponseEntity<UserDTO> findById(@PathVariable Long id) {
         var user = userService.getUser(id);
         return ResponseEntity.ok(user);
     }
 
     @GetMapping("user")
     @PreAuthorize("hasAnyAuthority('admin')")
-    public ResponseEntity<Page<User>> findAll(@PageableDefault(size = 10, page = 0) Pageable pageable) {
+    public ResponseEntity<Page<UserDTO>> findAll(@PageableDefault(size = 10, page = 0) Pageable pageable) {
         var users = userService.getAllUser(pageable);
         return ResponseEntity.ok(users);
     }

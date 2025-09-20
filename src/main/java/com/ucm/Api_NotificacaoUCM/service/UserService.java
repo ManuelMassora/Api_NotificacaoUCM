@@ -2,6 +2,7 @@ package com.ucm.Api_NotificacaoUCM.service;
 
 import com.ucm.Api_NotificacaoUCM.dto.CreateStudent;
 import com.ucm.Api_NotificacaoUCM.dto.CreateUser;
+import com.ucm.Api_NotificacaoUCM.dto.UserDTO;
 import com.ucm.Api_NotificacaoUCM.model.Role;
 import com.ucm.Api_NotificacaoUCM.model.Student;
 import com.ucm.Api_NotificacaoUCM.model.User;
@@ -126,15 +127,31 @@ public class UserService {
         }
     }
 
-    public User getUser(long id) {
-        return userRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Usuario não encontrada com ID: " + id));
+    public UserDTO getUser(long id) {
+        var user = userRepo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Usuario não encontrada com ID: " + id));
+        return new UserDTO(
+                user.getId(),
+                user.getName(),
+                user.getEmail()
+        );
     }
 
-    public User MyProfile(JwtAuthenticationToken token) {
-        return userRepo.findById(Long.parseLong(token.getName())).orElseThrow(() -> new EntityNotFoundException("Usuario não encontrada com ID"));
+    public UserDTO MyProfile(JwtAuthenticationToken token) {
+        var user = userRepo.findById(Long.parseLong(token.getName()))
+                .orElseThrow(() -> new EntityNotFoundException("Usuario não encontrada com ID"));
+        return new UserDTO(
+                user.getId(),
+                user.getName(),
+                user.getEmail()
+        );
     }
 
-    public Page<User> getAllUser(Pageable pageable) {
-        return userRepo.findAll(pageable);
+    public Page<UserDTO> getAllUser(Pageable pageable) {
+        return userRepo.findAll(pageable).map(user -> new UserDTO(
+                user.getId(),
+                user.getName(),
+                user.getEmail()
+        ));
     }
 }

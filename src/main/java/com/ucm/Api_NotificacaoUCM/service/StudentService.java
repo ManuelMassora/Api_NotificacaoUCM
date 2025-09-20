@@ -1,16 +1,21 @@
 package com.ucm.Api_NotificacaoUCM.service;
 
+import com.ucm.Api_NotificacaoUCM.dto.ClassDTO;
+import com.ucm.Api_NotificacaoUCM.dto.StudentDTO;
+import com.ucm.Api_NotificacaoUCM.dto.UserDTO;
 import com.ucm.Api_NotificacaoUCM.model.Class;
 import com.ucm.Api_NotificacaoUCM.model.Curso;
-import com.ucm.Api_NotificacaoUCM.model.Student;
 import com.ucm.Api_NotificacaoUCM.repo.ClassRepo;
 import com.ucm.Api_NotificacaoUCM.repo.StudentRepo;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 
 import java.util.Set;
+import java.util.stream.Collectors;
 
 @Service
 public class StudentService {
@@ -56,17 +61,35 @@ public class StudentService {
         studentRepo.save(student);
     }
 
-    public Set<Class> listarClassesDoEstudante(JwtAuthenticationToken token) {
+    public Page<ClassDTO> listarClassesDoEstudante(JwtAuthenticationToken token, Pageable pageable) {
         var userId = Long.parseLong(token.getName());
         var student = studentRepo.findByUserIdId(userId)
-                .orElseThrow(() -> new EntityNotFoundException("Estudante não encontrado"));
-        return student.getClasses();
+                .orElseThrow(() -> new EntityNotFoundException("Estudante nao existe"));
+        Page<Class> classesPage = classRepo.findByStudents_Id(student.getId(), pageable);
+        var classDtos = classesPage.map(classe -> new ClassDTO(
+                classe.getId(),
+                classe.getNome(),
+                classe.getDocente().getName(),
+                classe.getDescricao(),
+                classe.getAno(),
+                classe.getAnoLetivo()
+        ));
+        return classDtos;
     }
 
-    public Set<Class> listarClassesDoEstudante(long studentId) {
+    public Page<ClassDTO> listarClassesDoEstudante(long studentId, Pageable pageable) {
         var student = studentRepo.findById(studentId)
                 .orElseThrow(() -> new EntityNotFoundException("Estudante não encontrado"));
-        return student.getClasses();
+        Page<Class> classesPage = classRepo.findByStudents_Id(student.getId(), pageable);
+        var classDtos = classesPage.map(classe -> new ClassDTO(
+                classe.getId(),
+                classe.getNome(),
+                classe.getDocente().getName(),
+                classe.getDescricao(),
+                classe.getAno(),
+                classe.getAnoLetivo()
+        ));
+        return classDtos;
     }
 
     public Curso buscarCursoDoEstudante(JwtAuthenticationToken token) {
@@ -76,11 +99,23 @@ public class StudentService {
         return student.getCurso();
     }
 
-    public Student MyPerfil(JwtAuthenticationToken token) {
+    public StudentDTO MyPerfil(JwtAuthenticationToken token) {
         var userId = Long.parseLong(token.getName());
         var student = studentRepo.findByUserIdId(userId)
                 .orElseThrow(() -> new EntityNotFoundException("Estudante não encontrado"));
-        return student;
+        var userDTO = new UserDTO(
+                student.getUserId().getId(),
+                student.getUserId().getName(),
+                student.getUserId().getEmail()
+        );
+        var studentDTO = new StudentDTO(
+                userDTO,
+                student.getId(),
+                student.getStudentNumber(),
+                student.getAnoAcademindo(),
+                student.getCurso()
+        );
+        return studentDTO;
     }
 
     public Curso buscarCursoDoEstudante(long studentId) {

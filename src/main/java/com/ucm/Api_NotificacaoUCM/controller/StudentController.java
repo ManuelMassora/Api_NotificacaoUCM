@@ -1,10 +1,14 @@
 package com.ucm.Api_NotificacaoUCM.controller;
 
+import com.ucm.Api_NotificacaoUCM.dto.ClassDTO;
+import com.ucm.Api_NotificacaoUCM.dto.StudentDTO;
 import com.ucm.Api_NotificacaoUCM.model.Class;
 import com.ucm.Api_NotificacaoUCM.model.Curso;
 import com.ucm.Api_NotificacaoUCM.model.Student;
 import com.ucm.Api_NotificacaoUCM.service.StudentService;
 import jakarta.persistence.EntityNotFoundException;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -56,9 +60,9 @@ public class StudentController {
 
     @GetMapping("/classes")
     @PreAuthorize("hasAnyAuthority('basic')")
-    public ResponseEntity<Set<Class>> listarClassesDoEstudante(JwtAuthenticationToken token) {
+    public ResponseEntity<Page<ClassDTO>> listarClassesDoEstudante(JwtAuthenticationToken token, Pageable pageable) {
         try {
-            var classes = studentService.listarClassesDoEstudante(token);
+            var classes = studentService.listarClassesDoEstudante(token, pageable);
             return ResponseEntity.ok(classes);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -67,9 +71,9 @@ public class StudentController {
 
     @GetMapping("/{studentId}/classes")
     @PreAuthorize("hasAnyAuthority('admin')")
-    public ResponseEntity<Set<Class>> listarClassesDoEstudante(@PathVariable long studentId) {
+    public ResponseEntity<Page<ClassDTO>> listarClassesDoEstudante(@PathVariable long studentId, Pageable pageable) {
         try {
-            var classes = studentService.listarClassesDoEstudante(studentId);
+            var classes = studentService.listarClassesDoEstudante(studentId, pageable);
             return ResponseEntity.ok(classes);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();
@@ -100,7 +104,7 @@ public class StudentController {
 
     @GetMapping("/perfil")
     @PreAuthorize("hasAnyAuthority('basic')")
-    public ResponseEntity<Student> MyPerfil(JwtAuthenticationToken token) {
+    public ResponseEntity<StudentDTO> MyPerfil(JwtAuthenticationToken token) {
         try {
             var user = studentService.MyPerfil(token);
             return ResponseEntity.ok(user);

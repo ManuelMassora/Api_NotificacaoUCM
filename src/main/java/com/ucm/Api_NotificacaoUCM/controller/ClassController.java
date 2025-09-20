@@ -1,5 +1,6 @@
 package com.ucm.Api_NotificacaoUCM.controller;
 
+import com.ucm.Api_NotificacaoUCM.dto.ClassDTO;
 import com.ucm.Api_NotificacaoUCM.dto.CreateClass;
 import com.ucm.Api_NotificacaoUCM.dto.UpdateClass;
 import com.ucm.Api_NotificacaoUCM.model.Class;
@@ -44,34 +45,34 @@ public class ClassController {
 
     @GetMapping("{id}")
     @PreAuthorize("hasAnyAuthority('professor')")
-    public ResponseEntity<Class> findById(@PathVariable("id") Long id) {
-        Class classe = classService.findById(id);
+    public ResponseEntity<ClassDTO> findById(@PathVariable("id") Long id) {
+        ClassDTO classe = classService.findById(id);
         return ResponseEntity.ok(classe);
     }
 
     @GetMapping("/my")
     @PreAuthorize("hasAnyAuthority('professor')")
-    public ResponseEntity<Page<Class>> listByToken(JwtAuthenticationToken token, Pageable pageable) {
-        Page<Class> classes = classService.listByToken(token, pageable);
+    public ResponseEntity<Page<ClassDTO>> listByToken(JwtAuthenticationToken token, Pageable pageable) {
+        Page<ClassDTO> classes = classService.listByToken(token, pageable);
         return ResponseEntity.ok(classes);
     }
 
     @GetMapping
     @PreAuthorize("hasAnyAuthority('professor', 'admin')")
-    public ResponseEntity<Page<Class>> listAll(Pageable pageable) {
-        Page<Class> classes = classService.listAll(pageable);
+    public ResponseEntity<Page<ClassDTO>> listAll(Pageable pageable) {
+        Page<ClassDTO> classes = classService.listAll(pageable);
         return ResponseEntity.ok(classes);
     }
 
     @GetMapping("/cursoid/{id}")
-    public ResponseEntity<Page<Class>> listByCurso(@PathVariable("id") long cursoid, Pageable pageable) {
-        Page<Class> classes = classService.listByCurso(cursoid, pageable);
+    public ResponseEntity<Page<ClassDTO>> listByCurso(@PathVariable("id") long cursoid, Pageable pageable) {
+        Page<ClassDTO> classes = classService.listByCurso(cursoid, pageable);
         return ResponseEntity.ok(classes);
     }
 
     @GetMapping("/estudante")
-    public ResponseEntity<Page<Class>> listByEstudanteToken(JwtAuthenticationToken token,Pageable pageable) {
-        Page<Class> classes = classService.listByStudentToken(token, pageable);
+    public ResponseEntity<Page<ClassDTO>> listByEstudanteToken(JwtAuthenticationToken token,Pageable pageable) {
+        Page<ClassDTO> classes = classService.listByStudentToken(token, pageable);
         return ResponseEntity.ok(classes);
     }
 }

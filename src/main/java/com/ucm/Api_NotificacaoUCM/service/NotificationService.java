@@ -1,6 +1,8 @@
 package com.ucm.Api_NotificacaoUCM.service;
 
+import com.ucm.Api_NotificacaoUCM.dto.ClassDTO;
 import com.ucm.Api_NotificacaoUCM.dto.CreateNotification;
+import com.ucm.Api_NotificacaoUCM.dto.NotificationDTO;
 import com.ucm.Api_NotificacaoUCM.model.Notification;
 import com.ucm.Api_NotificacaoUCM.repo.ClassRepo;
 import com.ucm.Api_NotificacaoUCM.repo.NotificationRepo;
@@ -24,7 +26,7 @@ public class NotificationService {
     }
 
     @Transactional
-    public Notification create(CreateNotification dto) {
+    public NotificationDTO create(CreateNotification dto) {
         var classe = classRepo.findById(dto.classeId())
                 .orElseThrow(() -> new EntityNotFoundException("Classe não encontrada com ID: " + dto.classeId()));
 
@@ -34,19 +36,76 @@ public class NotificationService {
         notification.setClassId(classe);
         notification.setDataCriacao(LocalDateTime.now());
 
-        return notificationRepo.save(notification);
+        var notificationSave = notificationRepo.save(notification);
+
+        return new NotificationDTO(
+                notificationSave.getId(),
+                notificationSave.getTitulo(),
+                notificationSave.getDescricao(),
+                notificationSave.getDataCriacao(),
+                new ClassDTO(
+                        notificationSave.getClassId().getId(),
+                        notificationSave.getClassId().getNome(),
+                        notificationSave.getClassId().getDocente().getName(),
+                        notificationSave.getClassId().getDescricao(),
+                        notificationSave.getClassId().getAno(),
+                        notificationSave.getClassId().getAnoLetivo()
+                )
+        );
     }
 
-    public Optional<Notification> getById(long id) {
-        return notificationRepo.findById(id);
+    public NotificationDTO getById(long id) {
+        var notification = notificationRepo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Notiacao nao encontrada"));
+        var classDto = new ClassDTO(
+                notification.getClassId().getId(),
+                notification.getClassId().getNome(),
+                notification.getClassId().getDocente().getName(),
+                notification.getClassId().getDescricao(),
+                notification.getClassId().getAno(),
+                notification.getClassId().getAnoLetivo()
+        );
+        return new NotificationDTO(
+                notification.getId(),
+                notification.getTitulo(),
+                notification.getDescricao(),
+                notification.getDataCriacao(),
+                classDto
+        );
     }
 
-    public Page<Notification> getAll(Pageable pageable) {
-        return notificationRepo.findAll(pageable);
+    public Page<NotificationDTO> getAll(Pageable pageable) {
+        return notificationRepo.findAll(pageable).map(notification -> new NotificationDTO(
+                notification.getId(),
+                notification.getTitulo(),
+                notification.getDescricao(),
+                notification.getDataCriacao(),
+                new ClassDTO(
+                        notification.getClassId().getId(),
+                        notification.getClassId().getNome(),
+                        notification.getClassId().getDocente().getName(),
+                        notification.getClassId().getDescricao(),
+                        notification.getClassId().getAno(),
+                        notification.getClassId().getAnoLetivo()
+                )
+        ));
     }
 
-    public Page<Notification> getAllByClass(long classId, Pageable pageable) {
-        return notificationRepo.findAllByClassIdId(classId,pageable);
+    public Page<NotificationDTO> getAllByClass(long classId, Pageable pageable) {
+        return notificationRepo.findAllByClassIdId(classId,pageable).map(notification -> new NotificationDTO(
+                notification.getId(),
+                notification.getTitulo(),
+                notification.getDescricao(),
+                notification.getDataCriacao(),
+                new ClassDTO(
+                        notification.getClassId().getId(),
+                        notification.getClassId().getNome(),
+                        notification.getClassId().getDocente().getName(),
+                        notification.getClassId().getDescricao(),
+                        notification.getClassId().getAno(),
+                        notification.getClassId().getAnoLetivo()
+                )
+        ));
     }
 
     @Transactional
