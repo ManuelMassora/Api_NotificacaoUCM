@@ -2,6 +2,8 @@ package com.ucm.Api_NotificacaoUCM.model;
 
 import jakarta.persistence.*;
 
+import java.time.LocalDateTime;
+
 @Entity
 @Table(name = "notificacao")
 public class Notification {
@@ -20,6 +22,16 @@ public class Notification {
     @ManyToOne
     @JoinColumn(name = "Class_ID")
     private Class classId;
+
+    private LocalDateTime dataCriacao;
+
+    public LocalDateTime getDataCriacao() {
+        return dataCriacao;
+    }
+
+    public void setDataCriacao(LocalDateTime dataCriacao) {
+        this.dataCriacao = dataCriacao;
+    }
 
     public long getId() {
         return id;

@@ -9,8 +9,14 @@ import com.ucm.Api_NotificacaoUCM.repo.CursoRepository;
 import com.ucm.Api_NotificacaoUCM.repo.RoleRepo;
 import com.ucm.Api_NotificacaoUCM.repo.StudentRepo;
 import com.ucm.Api_NotificacaoUCM.repo.UserRepo;
+import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
+import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
 import org.springframework.stereotype.Service;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -33,6 +39,7 @@ public class UserService {
         this.cursoRepository = cursoRepository;
     }
 
+    @Transactional
     public void CreateStudent(CreateStudent createStudent) {
         if (createStudent == null) {
             throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "CreateStudent object cannot be null");
@@ -85,6 +92,7 @@ public class UserService {
         }
     }
 
+    @Transactional
     public void CreateTeacher(CreateUser createUser) {
         var role = roleRepo.findByName(Role.Values.PROFESSOR.name());
         if (createUser == null) {
@@ -116,5 +124,17 @@ public class UserService {
         } catch (Exception e) {
             throw new RuntimeException("Error saving student data: " + e.getMessage(), e);
         }
+    }
+
+    public User getUser(long id) {
+        return userRepo.findById(id).orElseThrow(() -> new EntityNotFoundException("Usuario não encontrada com ID: " + id));
+    }
+
+    public User MyProfile(JwtAuthenticationToken token) {
+        return userRepo.findById(Long.parseLong(token.getName())).orElseThrow(() -> new EntityNotFoundException("Usuario não encontrada com ID"));
+    }
+
+    public Page<User> getAllUser(Pageable pageable) {
+        return userRepo.findAll(pageable);
     }
 }

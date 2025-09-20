@@ -1,4 +1,6 @@
 package com.ucm.Api_NotificacaoUCM.dto;
 
-public record LoginRequest(String email, String password) {
+import jakarta.validation.constraints.Email;
+
+public record LoginRequest(@Email String email, String password) {
 }

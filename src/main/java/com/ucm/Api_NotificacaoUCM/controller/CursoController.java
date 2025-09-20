@@ -2,13 +2,10 @@ package com.ucm.Api_NotificacaoUCM.controller;
 
 import com.ucm.Api_NotificacaoUCM.model.Curso;
 import com.ucm.Api_NotificacaoUCM.service.CursoService;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.util.UriComponentsBuilder;
-
-import java.net.URI;
+import java.util.List;
 
 @RestController
 @RequestMapping("/curso")
@@ -20,10 +17,10 @@ public class CursoController {
     }
 
     @PostMapping
-    public ResponseEntity<Curso> create(@RequestBody String nome, UriComponentsBuilder uriBuilder) {
+    @PreAuthorize("hasAnyAuthority('admin')")
+    public ResponseEntity<Curso> create(@RequestBody String nome) {
         var novoCurso = cursoService.create(nome);
-        URI uri = uriBuilder.path("/curso/{id}").buildAndExpand(novoCurso.getId()).toUri();
-        return ResponseEntity.created(uri).body(novoCurso);
+        return ResponseEntity.ok().body(novoCurso);
     }
 
     @GetMapping("/{id}")
@@ -33,17 +30,19 @@ public class CursoController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Curso>> findAll(Pageable pageable) {
-        var cursos = cursoService.findAll(pageable);
+    public ResponseEntity<List<Curso>> findAll() {
+        var cursos = cursoService.findAll();
         return ResponseEntity.ok(cursos);
     }
 
+    @PreAuthorize("hasAnyAuthority('admin')")
     @PutMapping("/{id}")
     public ResponseEntity<Curso> update(@PathVariable Long id, @RequestBody String nome) {
         var cursoAtualizado = cursoService.update(id, nome);
         return ResponseEntity.ok(cursoAtualizado);
     }
 
+    @PreAuthorize("hasAnyAuthority('admin')")
     @DeleteMapping("/{id}")
     public ResponseEntity<Void> delete(@PathVariable Long id) {
         cursoService.delete(id);

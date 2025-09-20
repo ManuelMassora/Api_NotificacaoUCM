@@ -3,29 +3,16 @@ package com.ucm.Api_NotificacaoUCM.model;
 import jakarta.persistence.*;
 
 import java.time.LocalDateTime;
-import java.util.Date;
 
 @Entity
-@Table(name = "worktask")
-public class WorkTask {
-
+@Table(name = "anuncio")
+public class Anuncio {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "ID")
     private long id;
-
-    @Column(name = "Titulo", length = 255)
     private String titulo;
-
-    @Column(name = "Descricao", columnDefinition = "TEXT")
     private String descricao;
-
-    @Column(name = "Data_Entrega")
-    private Date dataEntrega;
-
-    @ManyToOne
-    @JoinColumn(name = "Class_ID")
-    private Class classId;
 
     private LocalDateTime dataCriacao;
 
@@ -59,21 +46,5 @@ public class WorkTask {
 
     public void setDescricao(String descricao) {
         this.descricao = descricao;
-    }
-
-    public Date getDataEntrega() {
-        return dataEntrega;
-    }
-
-    public void setDataEntrega(Date dataEntrega) {
-        this.dataEntrega = dataEntrega;
-    }
-
-    public Class getClassId() {
-        return classId;
-    }
-
-    public void setClassId(Class classId) {
-        this.classId = classId;
     }
 }
