@@ -132,7 +132,8 @@ public class ClassService {
                 classe.getDocente().getName(),
                 classe.getDescricao(),
                 classe.getAno(),
-                classe.getAnoLetivo()
+                classe.getAnoLetivo(),
+                classe.getCurso().getNome()
         );
     }
 
@@ -147,7 +148,8 @@ public class ClassService {
                 classe.getDocente().getName(),
                 classe.getDescricao(),
                 classe.getAno(),
-                classe.getAnoLetivo()
+                classe.getAnoLetivo(),
+                classe.getCurso().getNome()
         ));
     }
 
@@ -162,7 +164,8 @@ public class ClassService {
                 classe.getDocente().getName(),
                 classe.getDescricao(),
                 classe.getAno(),
-                classe.getAnoLetivo()
+                classe.getAnoLetivo(),
+                classe.getCurso().getNome()
         ));
     }
 
@@ -179,7 +182,8 @@ public class ClassService {
                 classe.getDocente().getName(),
                 classe.getDescricao(),
                 classe.getAno(),
-                classe.getAnoLetivo()
+                classe.getAnoLetivo(),
+                classe.getCurso().getNome()
         ));
     }
 
@@ -190,7 +194,8 @@ public class ClassService {
                 classe.getDocente().getName(),
                 classe.getDescricao(),
                 classe.getAno(),
-                classe.getAnoLetivo()
+                classe.getAnoLetivo(),
+                classe.getCurso().getNome()
         ));
     }
 }

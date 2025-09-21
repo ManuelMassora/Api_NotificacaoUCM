@@ -51,7 +51,8 @@ public class WorkTaskService {
                         workTaskSave.getClassId().getDocente().getName(),
                         workTaskSave.getClassId().getDescricao(),
                         workTaskSave.getClassId().getAno(),
-                        workTaskSave.getClassId().getAnoLetivo()
+                        workTaskSave.getClassId().getAnoLetivo(),
+                        workTask.getClassId().getCurso().getNome()
                 )
         );
     }
@@ -65,7 +66,8 @@ public class WorkTaskService {
                 workTask.getClassId().getDocente().getName(),
                 workTask.getClassId().getDescricao(),
                 workTask.getClassId().getAno(),
-                workTask.getClassId().getAnoLetivo()
+                workTask.getClassId().getAnoLetivo(),
+                workTask.getClassId().getCurso().getNome()
         );
         return new WorkTaskDTO(
                 workTask.getId(),
@@ -90,7 +92,8 @@ public class WorkTaskService {
                         workTask.getClassId().getDocente().getName(),
                         workTask.getClassId().getDescricao(),
                         workTask.getClassId().getAno(),
-                        workTask.getClassId().getAnoLetivo()
+                        workTask.getClassId().getAnoLetivo(),
+                        workTask.getClassId().getCurso().getNome()
                 )
         ));
     }
@@ -108,7 +111,8 @@ public class WorkTaskService {
                         workTask.getClassId().getDocente().getName(),
                         workTask.getClassId().getDescricao(),
                         workTask.getClassId().getAno(),
-                        workTask.getClassId().getAnoLetivo()
+                        workTask.getClassId().getAnoLetivo(),
+                        workTask.getClassId().getCurso().getNome()
                 )
         ));
     }
@@ -141,7 +145,8 @@ public class WorkTaskService {
                         workTaskSave.getClassId().getDocente().getName(),
                         workTaskSave.getClassId().getDescricao(),
                         workTaskSave.getClassId().getAno(),
-                        workTaskSave.getClassId().getAnoLetivo()
+                        workTaskSave.getClassId().getAnoLetivo(),
+                        workTask.getClassId().getCurso().getNome()
                 )
         );
     }

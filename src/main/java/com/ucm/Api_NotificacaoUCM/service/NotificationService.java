@@ -49,7 +49,8 @@ public class NotificationService {
                         notificationSave.getClassId().getDocente().getName(),
                         notificationSave.getClassId().getDescricao(),
                         notificationSave.getClassId().getAno(),
-                        notificationSave.getClassId().getAnoLetivo()
+                        notificationSave.getClassId().getAnoLetivo(),
+                        notificationSave.getClassId().getCurso().getNome()
                 )
         );
     }
@@ -63,7 +64,8 @@ public class NotificationService {
                 notification.getClassId().getDocente().getName(),
                 notification.getClassId().getDescricao(),
                 notification.getClassId().getAno(),
-                notification.getClassId().getAnoLetivo()
+                notification.getClassId().getAnoLetivo(),
+                notification.getClassId().getCurso().getNome()
         );
         return new NotificationDTO(
                 notification.getId(),
@@ -86,7 +88,8 @@ public class NotificationService {
                         notification.getClassId().getDocente().getName(),
                         notification.getClassId().getDescricao(),
                         notification.getClassId().getAno(),
-                        notification.getClassId().getAnoLetivo()
+                        notification.getClassId().getAnoLetivo(),
+                        notification.getClassId().getCurso().getNome()
                 )
         ));
     }
@@ -103,7 +106,8 @@ public class NotificationService {
                         notification.getClassId().getDocente().getName(),
                         notification.getClassId().getDescricao(),
                         notification.getClassId().getAno(),
-                        notification.getClassId().getAnoLetivo()
+                        notification.getClassId().getAnoLetivo(),
+                        notification.getClassId().getCurso().getNome()
                 )
         ));
     }

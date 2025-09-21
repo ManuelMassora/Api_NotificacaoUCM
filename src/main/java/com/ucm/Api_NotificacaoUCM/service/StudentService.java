@@ -72,7 +72,8 @@ public class StudentService {
                 classe.getDocente().getName(),
                 classe.getDescricao(),
                 classe.getAno(),
-                classe.getAnoLetivo()
+                classe.getAnoLetivo(),
+                classe.getCurso().getNome()
         ));
         return classDtos;
     }
@@ -87,7 +88,8 @@ public class StudentService {
                 classe.getDocente().getName(),
                 classe.getDescricao(),
                 classe.getAno(),
-                classe.getAnoLetivo()
+                classe.getAnoLetivo(),
+                classe.getCurso().getNome()
         ));
         return classDtos;
     }
