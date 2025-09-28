@@ -52,9 +52,10 @@ public class AnuncioController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<Anuncio>> listarTodos(@PageableDefault(size = 10, sort = {"titulo"}) Pageable pageable) {
-        var page = anuncioService.getAllFilter(pageable);
+    public ResponseEntity<Page<Anuncio>> listarTodos(
+            @RequestParam(required = false) String titulo,
+            @PageableDefault(size = 10, sort = {"dataCriacao"}) Pageable pageable) {
+        var page = anuncioService.getAllFilter(titulo,pageable);
         return ResponseEntity.ok(page);
     }
-
 }

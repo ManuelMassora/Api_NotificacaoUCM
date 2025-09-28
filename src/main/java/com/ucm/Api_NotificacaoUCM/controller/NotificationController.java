@@ -51,9 +51,12 @@ public class NotificationController {
     }
 
     @GetMapping("/by-class/{classId}")
-    public ResponseEntity<Page<NotificationDTO>> getAllByClass(@PathVariable long classId, @PageableDefault(size = 10, sort = {"dataCriacao"}) Pageable pageable) {
+    public ResponseEntity<Page<NotificationDTO>> getAllByClass(
+            @PathVariable long classId,
+            @RequestParam(required = false) String titulo,
+            @PageableDefault(size = 10, sort = {"dataCriacao"}) Pageable pageable) {
         try {
-            Page<NotificationDTO> notifications = notificationService.getAllByClass(classId, pageable);
+            Page<NotificationDTO> notifications = notificationService.getAllByClass(classId, titulo, pageable);
             return ResponseEntity.ok(notifications);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();

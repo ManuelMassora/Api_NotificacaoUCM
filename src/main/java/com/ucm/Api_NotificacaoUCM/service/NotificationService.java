@@ -94,8 +94,11 @@ public class NotificationService {
         ));
     }
 
-    public Page<NotificationDTO> getAllByClass(long classId, Pageable pageable) {
-        return notificationRepo.findAllByClassIdId(classId,pageable).map(notification -> new NotificationDTO(
+    public Page<NotificationDTO> getAllByClass(long classId, String titulo, Pageable pageable) {
+        if (titulo == null || titulo.isBlank()) {
+            titulo = "";
+        }
+        return notificationRepo.findAllByClassIdIdAndAndTituloContaining(classId, titulo, pageable).map(notification -> new NotificationDTO(
                 notification.getId(),
                 notification.getTitulo(),
                 notification.getDescricao(),

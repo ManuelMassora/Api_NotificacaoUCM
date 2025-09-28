@@ -14,9 +14,9 @@ import java.util.Set;
 @Configuration
 public class AdminUserConfig implements CommandLineRunner {
 
-    private UserRepo userRepo;
-    private RoleRepo roleRepo;
-    private BCryptPasswordEncoder passwordEncoder;
+    private final UserRepo userRepo;
+    private final RoleRepo roleRepo;
+    private final BCryptPasswordEncoder passwordEncoder;
 
     public AdminUserConfig(UserRepo userRepository,
                            RoleRepo roleRepository,

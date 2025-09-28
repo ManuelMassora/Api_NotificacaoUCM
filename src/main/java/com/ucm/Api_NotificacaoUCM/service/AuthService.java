@@ -5,7 +5,6 @@ import com.ucm.Api_NotificacaoUCM.dto.LoginResponse;
 import com.ucm.Api_NotificacaoUCM.model.Role;
 import com.ucm.Api_NotificacaoUCM.repo.UserRepo;
 import jakarta.validation.Valid;
-import lombok.RequiredArgsConstructor;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;

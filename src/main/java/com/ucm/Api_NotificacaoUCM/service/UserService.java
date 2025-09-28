@@ -14,7 +14,6 @@ import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.server.resource.authentication.JwtAuthenticationToken;
@@ -147,8 +146,14 @@ public class UserService {
         );
     }
 
-    public Page<UserDTO> getAllUser(Pageable pageable) {
-        return userRepo.findAll(pageable).map(user -> new UserDTO(
+    public Page<UserDTO> getAllUser(String nome, String email, Pageable pageable) {
+        if (nome == null || nome.isBlank()) {
+            nome = "";
+        }
+        if (email == null || email.isEmpty()) {
+            email = "";
+        }
+        return userRepo.findAllByNameContainingAndEmailContaining(nome, email, pageable).map(user -> new UserDTO(
                 user.getId(),
                 user.getName(),
                 user.getEmail()

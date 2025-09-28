@@ -98,8 +98,11 @@ public class WorkTaskService {
         ));
     }
 
-    public Page<WorkTaskDTO> getAllByClass(long classId, Pageable pageable) {
-        return workTaskRepo.findAllByClassIdId(classId,pageable).map(workTask -> new WorkTaskDTO(
+    public Page<WorkTaskDTO> getAllByClass(long classId, String titulo, Pageable pageable) {
+        if (titulo == null || titulo.isBlank()) {
+            titulo = "";
+        }
+        return workTaskRepo.findAllByClassIdIdAndTituloContaining(classId, titulo,pageable).map(workTask -> new WorkTaskDTO(
                 workTask.getId(),
                 workTask.getTitulo(),
                 workTask.getDescricao(),

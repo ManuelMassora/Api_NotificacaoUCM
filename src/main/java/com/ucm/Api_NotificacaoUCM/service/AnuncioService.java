@@ -45,7 +45,10 @@ public class AnuncioService {
         return anuncio.get();
     }
 
-    public Page<Anuncio> getAllFilter(Pageable pageable) {
-        return anuncioRepo.findAll(pageable);
+    public Page<Anuncio> getAllFilter(String titulo, Pageable pageable) {
+        if (titulo == null || titulo.isBlank()) {
+            titulo = "";
+        }
+        return anuncioRepo.findAllByTituloContaining(titulo,pageable);
     }
 }

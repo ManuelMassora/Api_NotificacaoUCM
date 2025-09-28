@@ -12,7 +12,6 @@ import jakarta.validation.Valid;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("task")
@@ -42,9 +41,12 @@ public class WorkTaskController {
     }
 
     @GetMapping("/by-class/{classId}")
-    public ResponseEntity<Page<WorkTaskDTO>> getAllByClass(@PathVariable long classId, @PageableDefault(size = 10, sort = {"dataEntrega"}) Pageable pageable) {
+    public ResponseEntity<Page<WorkTaskDTO>> getAllByClass(
+            @PathVariable long classId,
+            @RequestParam(required = false) String titulo,
+            @PageableDefault(size = 10, sort = {"dataCriacao"}) Pageable pageable) {
         try {
-            Page<WorkTaskDTO> tasks = workTaskService.getAllByClass(classId, pageable);
+            Page<WorkTaskDTO> tasks = workTaskService.getAllByClass(classId, titulo, pageable);
             return ResponseEntity.ok(tasks);
         } catch (EntityNotFoundException e) {
             return ResponseEntity.notFound().build();

@@ -69,8 +69,11 @@ public class UserController {
 
     @GetMapping("user")
     @PreAuthorize("hasAnyAuthority('admin')")
-    public ResponseEntity<Page<UserDTO>> findAll(@PageableDefault(size = 10, page = 0) Pageable pageable) {
-        var users = userService.getAllUser(pageable);
+    public ResponseEntity<Page<UserDTO>> findAll(
+            @PageableDefault(size = 10, page = 0, sort = {"name"}) Pageable pageable,
+            @RequestParam(required = false) String nome,
+            @RequestParam(required = false) String email) {
+        var users = userService.getAllUser(nome, email, pageable);
         return ResponseEntity.ok(users);
     }
 }

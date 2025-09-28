@@ -6,5 +6,5 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface WorkTaskRepo extends JpaRepository<WorkTask, Long> {
-    Page<WorkTask> findAllByClassIdId(long classId, Pageable pageable);
+    Page<WorkTask> findAllByClassIdIdAndTituloContaining(long classId, String tiulo, Pageable pageable);
 }
