@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 public interface ClassRepo extends JpaRepository<Class, Long> {
     Page<Class> findByDocente(User docente, Pageable pageable);
     Page<Class> findByCurso(Curso curso, Pageable pageable);
-    Page<Class> findByCursoAndAno(Curso curso, int ano, Pageable pageable);
+    Page<Class> findByCursoAndAnoLessThanEqualAndNomeContaining(Curso curso, int ano, String nome, Pageable pageable);
     @Query("SELECT c FROM Class c JOIN c.students s WHERE s.id = :studentId")
     Page<Class> findByStudents_Id(@Param("studentId") Long studentId, Pageable pageable);
 }

@@ -71,8 +71,11 @@ public class ClassController {
     }
 
     @GetMapping("/estudante")
-    public ResponseEntity<Page<ClassDTO>> listByEstudanteToken(JwtAuthenticationToken token,Pageable pageable) {
-        Page<ClassDTO> classes = classService.listByStudentToken(token, pageable);
+    public ResponseEntity<Page<ClassDTO>> listByEstudanteToken(
+            JwtAuthenticationToken token,
+            @RequestParam(required = false) String nome,
+            Pageable pageable) {
+        Page<ClassDTO> classes = classService.listByStudentToken(token, nome, pageable);
         return ResponseEntity.ok(classes);
     }
 }

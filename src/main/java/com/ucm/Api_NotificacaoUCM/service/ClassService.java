@@ -169,14 +169,17 @@ public class ClassService {
         ));
     }
 
-    public Page<ClassDTO> listByStudentToken(JwtAuthenticationToken token, Pageable pageable) {
+    public Page<ClassDTO> listByStudentToken(JwtAuthenticationToken token, String nome, Pageable pageable) {
         var user = userRepo.findById(Long.parseLong(token.getName()))
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.UNAUTHORIZED, "Usuário não encontrado."));
         var student = studentRepo.findByUserId(user)
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.FORBIDDEN, "Acesso negado. Apenas estudantes podem listar classes por curso."));
         var curso = cursoRepository.findById(student.getCurso().getId())
                 .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Curso não encontrado para o estudante."));
-        return classRepo.findByCursoAndAno(curso, student.getAnoAcademindo(), pageable).map(classe -> new ClassDTO(
+        if (nome == null || nome.isBlank()) {
+            nome = "";
+        }
+        return classRepo.findByCursoAndAnoLessThanEqualAndNomeContaining(curso, student.getAnoAcademindo(), nome, pageable).map(classe -> new ClassDTO(
                 classe.getId(),
                 classe.getNome(),
                 classe.getDocente().getName(),
