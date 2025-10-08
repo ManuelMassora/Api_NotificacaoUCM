@@ -1,5 +1,6 @@
 package com.ucm.Api_NotificacaoUCM.controller;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
 import com.ucm.Api_NotificacaoUCM.dto.CreateNotification;
 import com.ucm.Api_NotificacaoUCM.dto.NotificacaoStatsDTO;
 import com.ucm.Api_NotificacaoUCM.dto.NotificationDTO;
@@ -28,7 +29,7 @@ public class NotificationController {
 
     @PostMapping
     @PreAuthorize("hasAnyAuthority('professor')")
-    public ResponseEntity<NotificationDTO> create(@RequestBody @Valid CreateNotification dto) {
+    public ResponseEntity<NotificationDTO> create(@RequestBody @Valid CreateNotification dto) throws JsonProcessingException {
         try {
             var createdNotification = notificationService.create(dto);
             return ResponseEntity.ok().body(createdNotification);

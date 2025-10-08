@@ -7,6 +7,7 @@ import com.ucm.Api_NotificacaoUCM.model.User;
 import com.ucm.Api_NotificacaoUCM.service.AuthService;
 import com.ucm.Api_NotificacaoUCM.service.UserService;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -44,8 +45,9 @@ public class UserController {
     }
 
     @PostMapping("/auth")
-    public ResponseEntity<LoginResponse> auth(@Valid @RequestBody LoginRequest loginRequest) {
-        var response = authService.authenicateCliente(loginRequest);
+    public ResponseEntity<LoginResponse> auth(@Valid @RequestBody LoginRequest loginRequest,
+                                              HttpServletResponse httpServletResponse) {
+        var response = authService.authenicateCliente(loginRequest, httpServletResponse);
         return ResponseEntity.ok(response);
     }
 
