@@ -6,6 +6,8 @@ import com.ucm.Api_NotificacaoUCM.model.Role;
 import com.ucm.Api_NotificacaoUCM.repo.UserRepo;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.ResponseCookie;
 import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.oauth2.jwt.JwtClaimsSet;
@@ -36,14 +38,14 @@ public class AuthService {
             HttpServletResponse response
     ) {
         var user = userRepo.findByEmail(loginRequest.email())
-                .orElseThrow(() -> new BadCredentialsException("Credenciais invalidas"));
+                .orElseThrow(() -> new BadCredentialsException("Credenciais inválidas"));
 
-        if(!user.isLoginCorrect(loginRequest, passwordEncoder)) {
-            throw new BadCredentialsException("Credenciais invalidas");
+        if (!user.isLoginCorrect(loginRequest, passwordEncoder)) {
+            throw new BadCredentialsException("Credenciais inválidas");
         }
 
         var now = Instant.now();
-        var expiredIn = 1L; // 1 Hora de duracao
+        var expiredIn = 1L; // 1 hora
         var expirationDuration = Duration.ofHours(expiredIn);
 
         var roles = user.getRoles()
@@ -61,32 +63,21 @@ public class AuthService {
 
         var jwtValue = jwtEncoder.encode(JwtEncoderParameters.from(claims)).getTokenValue();
 
-        // 1. Calculo de data/hora de expiração
-        var expirationInstant = now.plus(expirationDuration);
-        var expirationDurationSeconds = expirationDuration.getSeconds();
+        // Cookie para ambiente de desenvolvimento (HTTP)
+        ResponseCookie cookie = ResponseCookie.from("access_token", jwtValue)
+                .httpOnly(true)
+                .secure(true) // Desativado para desenvolvimento (HTTP)
+                .sameSite("None") // Compatível com HTTP e ambiente local
+                .path("/")
+                .maxAge(expirationDuration) // Corrigido para segundos
+                .build();
 
-        // 2. Formate a data para o padrão GMT (RFC 1123)
-        String expiresFormatted = DateTimeFormatter
-                .RFC_1123_DATE_TIME
-                .withZone(ZoneId.of("GMT"))
-                .format(expirationInstant);
+        response.addHeader(HttpHeaders.SET_COOKIE, cookie.toString());
 
-        // 3. Defina o status 'Secure'
-        // IMPORTANTE: Mude para 'true' (Secure) em produção!
-        // Usar 'false' é aceitável APENAS em ambiente local (HTTP).
-        String secureAttribute = "false"; // "false" (HTTP) ou "true" (HTTPS)
+        // Log para depuração
+        System.out.println("Cookie gerado: " + cookie.toString());
+        System.out.println("Max-Age (segundos): " + expirationDuration.getSeconds());
 
-        String cookieHeader = String.format(
-                "%s=%s; Max-Age=%d; Path=/; HttpOnly; SameSite=Lax; Secure=%s; Expires=%s",
-                "access_token",
-                jwtValue,
-                expirationDurationSeconds,
-                secureAttribute,
-                expiresFormatted
-        );
-
-        // 5. Adicione o cabeçalho à resposta HTTP
-        response.addHeader("Set-Cookie", cookieHeader);
-        return new LoginResponse(null, expiredIn);
+        return new LoginResponse(roles, expiredIn);
     }
 }
